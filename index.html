@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Scale Up — un roguelike de startup rapide et rejouable." />
+  <title>Scale Up</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <p class="eyebrow">STARTUP ROGUELIKE</p>
+      <h1>SCALE UP</h1>
+      <p class="tagline">1 000 €. Une startup. Atteins 1 M€ avant de tout perdre.</p>
+    </section>
+
+    <section id="start-screen" class="panel start-panel">
+      <div>
+        <p class="kicker">Nouvelle partie</p>
+        <h2>Tu pars de presque rien.</h2>
+        <p>Chaque décision fait avancer le temps et change ton cash, tes utilisateurs, ta réputation et ta valorisation.</p>
+      </div>
+      <button id="start-btn" class="primary-btn">Lancer la startup</button>
+    </section>
+
+    <section id="game-screen" class="hidden">
+      <div class="stats-grid">
+        <article class="stat-card"><span>Cash</span><strong id="cash">1 000 €</strong></article>
+        <article class="stat-card"><span>Utilisateurs</span><strong id="users">0</strong></article>
+        <article class="stat-card"><span>Réputation</span><strong id="reputation">50</strong></article>
+        <article class="stat-card"><span>Valorisation</span><strong id="valuation">1 000 €</strong></article>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-head"><span>Objectif : 1 000 000 €</span><span id="turn-label">Tour 1</span></div>
+        <div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div>
+      </div>
+
+      <section class="event-card">
+        <div class="event-meta">
+          <span id="event-category">OPPORTUNITÉ</span>
+          <span id="event-risk">Risque moyen</span>
+        </div>
+        <h2 id="event-title"></h2>
+        <p id="event-description"></p>
+        <div id="choices" class="choices"></div>
+      </section>
+
+      <section class="feed-card">
+        <div class="feed-head"><span>Journal</span><button id="restart-btn" class="ghost-btn">Recommencer</button></div>
+        <div id="feed" class="feed"></div>
+      </section>
+    </section>
+
+    <section id="end-screen" class="panel hidden">
+      <p id="end-kicker" class="kicker"></p>
+      <h2 id="end-title"></h2>
+      <p id="end-copy"></p>
+      <div class="result-grid">
+        <div><span>Valorisation</span><strong id="end-valuation"></strong></div>
+        <div><span>Utilisateurs</span><strong id="end-users"></strong></div>
+        <div><span>Tours</span><strong id="end-turns"></strong></div>
+      </div>
+      <button id="play-again-btn" class="primary-btn">Rejouer</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
