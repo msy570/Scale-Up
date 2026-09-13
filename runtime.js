@@ -117,7 +117,7 @@ function renderLive(){
   const cge=$id('customer-growth');if(cge){cge.textContent=fmtPct(cg);statClass(cge,cg||0);cge.title='Variation du nombre de clients actifs par rapport au mois précédent.'}
   const vge=$id('valuation-growth');if(vge){vge.textContent=fmtPct(vg);statClass(vge,vg||0);vge.title='Variation de la valorisation par rapport au mois précédent.'}
   const profit=$id('profit-live');if(profit){profit.textContent=fmtMoney(state.profit);statClass(profit,state.profit)}
-  const rw=runway(),r=$id('runway-live');if(r){r.textContent=rw===Infinity?'Rentable':`${rw.toFixed(1)} mois`;statClass(r,rw===Infinity||rw>=6?1:rw<3?-1:0)}
+  const rw=runway(),r=$id('runway-live');if(r){r.textContent=rw===Infinity?'∞ mois · rentable':`${rw.toFixed(1)} mois`;r.title=rw===Infinity?'L’entreprise ne brûle plus de cash : au rythme actuel, le runway est illimité.':`Environ ${rw.toFixed(1)} mois avant d’épuiser le cash au rythme actuel.`;statClass(r,rw===Infinity||rw>=6?1:rw<3?-1:0)}
   const worth=$id('owner-worth');if(worth){worth.textContent=fmtMoney(founderWorth());worth.title='Valorisation × part détenue.'}
   const debt=$id('debt-live');if(debt){debt.textContent=fmtMoney(state.debt||0);statClass(debt,-(state.debt||0))}
   const nm=$id('net-margin'),m=netMargin();if(nm){nm.textContent=m===null?'—':fmtPct(m);statClass(nm,m||0);nm.title='Résultat mensuel ÷ revenu mensuel.'}
