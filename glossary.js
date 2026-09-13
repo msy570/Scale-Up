@@ -1,8 +1,8 @@
 (function(){
 'use strict';
-const VERSION='V0.9.4';
+const VERSION='V0.9.5';
 const TERMS={
-  'runway':{title:'Runway',def:'Le nombre de mois pendant lesquels ton entreprise peut encore fonctionner avec son cash actuel si elle continue à perdre de l’argent au même rythme.'},
+  'runway':{title:'Runway',def:'Le nombre de mois pendant lesquels ton entreprise peut encore fonctionner avec son cash actuel si elle perd de l’argent. Si elle gagne au moins autant qu’elle dépense, le runway est considéré comme illimité : ∞ mois.'},
   'valorisation':{title:'Valorisation',def:'La valeur estimée de toute l’entreprise. Ce n’est pas l’argent disponible sur le compte bancaire.'},
   'dilution':{title:'Dilution',def:'La baisse de ton pourcentage de propriété quand de nouvelles parts sont données ou vendues à des investisseurs.'},
   'burn':{title:'Burn',def:'L’argent que l’entreprise perd chaque mois quand ses dépenses sont supérieures à ses revenus.'},
