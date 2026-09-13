@@ -21,7 +21,10 @@
         <h2>Chaque mois compte.</h2>
         <p>Les utilisateurs deviennent des clients, les clients génèrent du revenu, l'équipe coûte des salaires et ta valorisation dépend réellement de ton entreprise.</p>
       </div>
-      <button id="start-btn" class="primary-btn">Lancer la startup</button>
+      <div class="start-actions">
+        <button id="start-btn" class="primary-btn">Lancer la startup</button>
+        <button id="last-run-btn" class="ghost-btn hidden">Revoir la dernière partie</button>
+      </div>
     </section>
 
     <section id="game-screen" class="hidden">
@@ -60,7 +63,13 @@
       </section>
 
       <section class="feed-card">
-        <div class="feed-head"><span>Journal</span><button id="restart-btn" class="ghost-btn">Recommencer</button></div>
+        <div class="feed-head">
+          <span>Journal</span>
+          <div class="feed-actions">
+            <button id="review-btn" class="ghost-btn">Revoir la partie</button>
+            <button id="restart-btn" class="ghost-btn">Recommencer</button>
+          </div>
+        </div>
         <div id="feed" class="feed"></div>
       </section>
     </section>
@@ -75,9 +84,27 @@
         <div><span>Valeur de ta part</span><strong id="end-worth"></strong></div>
         <div><span>Revenu mensuel</span><strong id="end-revenue"></strong></div>
       </div>
-      <button id="play-again-btn" class="primary-btn">Rejouer</button>
+      <div class="end-actions">
+        <button id="end-review-btn" class="ghost-btn">Revoir ma partie</button>
+        <button id="play-again-btn" class="primary-btn">Rejouer</button>
+      </div>
     </section>
   </main>
+
+  <div id="review-overlay" class="review-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="review-title">
+    <section class="review-modal">
+      <div class="review-head">
+        <div>
+          <p class="kicker">HISTORIQUE DE RUN</p>
+          <h2 id="review-title">Ta partie, mois par mois</h2>
+          <p id="review-summary" class="review-summary"></p>
+        </div>
+        <button id="close-review-btn" class="ghost-btn">Fermer</button>
+      </div>
+      <div id="review-list" class="review-list"></div>
+    </section>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
