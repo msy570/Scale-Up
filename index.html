@@ -49,5 +49,6 @@
     function openReview(run=reviewRun){const selected=run&&run.length?run:loadLastRun();renderReview(selected);$('review-overlay').classList.remove('hidden');document.body.style.overflow='hidden'} function closeReview(){$('review-overlay').classList.add('hidden');document.body.style.overflow=''}
     ['start-btn','restart-btn','play-again-btn'].forEach(id=>$(id).addEventListener('click',startReviewRun));$('review-btn').addEventListener('click',()=>openReview());$('end-review-btn').addEventListener('click',()=>openReview());$('last-run-btn').addEventListener('click',()=>openReview(loadLastRun()));$('close-review-btn').addEventListener('click',closeReview);$('review-overlay').addEventListener('click',e=>{if(e.target===$('review-overlay'))closeReview()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('review-overlay').classList.contains('hidden'))closeReview()});updateLastRunButton();
   </script>
+  <script src="v06patch.js"></script>
 </body>
 </html>
