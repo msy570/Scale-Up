@@ -1,0 +1,47 @@
+
+(function(){
+'use strict';
+
+const VERSION='V0.9';
+const STORE='scale-up-v09-runs';
+const MAX_RUNS=30;
+const $id=id=>document.getElementById(id);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const cap=(n,a,b)=>Math.max(a,Math.min(b,n));
+const money=n=>fmtMoney(Math.round(Number(n)||0));
+
+const STARTS={
+  grocer:{name:'Épicier du coin',icon:'🛒',desc:'Petit commerce local : stock, fournisseurs, passage et marge.',salary:900,labels:['Passage','Qualité offre','Panier moyen'],s:{cash:1000,users:220,customers:32,price:22,employees:0,team:1,reputation:58,product:48,growth:.055,conversion:.145,equity:1,debt:0},bonus:{SUPPLY:4,OPERATIONS:3,CUSTOMER:3},ladder:[[0,'Épicier du coin'],[25000,'Gérant de supérette'],[150000,'Gérant de marché'],[1000000,'Directeur de supermarché'],[10000000,'Propriétaire d’hypermarché'],[100000000,'Groupe de centres commerciaux'],[1000000000,'Empire commercial mondial']]},
+  freelance:{name:'Indépendant',icon:'🧠',desc:'Tu vends ton expertise : clients, capacité, tarifs et recrutement.',salary:1800,labels:['Prospects','Expertise','Panier client'],s:{cash:2500,users:55,customers:5,price:520,employees:0,team:1,reputation:62,product:56,growth:.06,conversion:.09,equity:1,debt:0},bonus:{SALES:4,TEAM:2,CUSTOMER:3},ladder:[[0,'Indépendant'],[100000,'Studio spécialisé'],[500000,'Agence locale'],[1500000,'Agence nationale'],[15000000,'Groupe de conseil'],[150000000,'Réseau international'],[1000000000,'Holding mondiale']]},
+  ecommerce:{name:'Boutique e-commerce',icon:'📦',desc:'Acquisition, stock, logistique, retours et marque.',salary:1200,labels:['Visiteurs','Qualité boutique','Panier moyen'],s:{cash:5000,users:900,customers:48,price:54,employees:0,team:1,reputation:52,product:50,growth:.09,conversion:.055,equity:1,debt:0},bonus:{MARKETING:3,SUPPLY:4,CUSTOMER:2,OPERATIONS:2},ladder:[[0,'Petite boutique en ligne'],[120000,'Marque émergente'],[700000,'Boutique nationale'],[3000000,'Marketplace spécialisée'],[30000000,'Groupe retail'],[300000000,'Leader omnicanal'],[1000000000,'Empire e-commerce mondial']]},
+  saas:{name:'SaaS de garage',icon:'💻',desc:'Produit logiciel récurrent : churn, cloud, intégrations et levées.',salary:1500,labels:['Utilisateurs','Produit','Abonnement'],s:{cash:8000,users:420,customers:24,price:29,employees:0,team:1,reputation:50,product:52,growth:.12,conversion:.058,equity:1,debt:0},bonus:{PRODUCT:4,INFRA:4,FINANCE:2},ladder:[[0,'Projet de garage'],[50000,'Micro-SaaS'],[500000,'Startup'],[5000000,'Scale-up'],[100000000,'Leader international'],[1000000000,'Licorne'],[10000000000,'Décacorne']]},
+  pme:{name:'PME familiale',icon:'🏭',desc:'Entreprise installée : équipe, production, fournisseurs et expansion.',salary:1700,labels:['Prospects','Qualité offre','Panier client'],s:{cash:25000,users:650,customers:70,price:185,employees:3,team:4,reputation:66,product:61,growth:.055,conversion:.108,equity:1,debt:5000},bonus:{OPERATIONS:4,SUPPLY:3,TEAM:2,EXPANSION:3},ladder:[[0,'PME locale'],[600000,'PME régionale'],[3000000,'ETI émergente'],[20000000,'Groupe national'],[200000000,'Champion européen'],[1000000000,'Multinationale'],[10000000000,'Conglomérat mondial']]},
+  funded:{name:'Startup financée',icon:'🚀',desc:'Capital et équipe dès le départ, avec une forte pression de croissance.',salary:2100,labels:['Utilisateurs','Produit','Abonnement'],s:{cash:100000,users:3500,customers:170,price:39,employees:6,team:7,reputation:55,product:62,growth:.18,conversion:.052,equity:.78,debt:0},bonus:{FINANCE:3,TEAM:2,MARKETING:2,INFRA:2,EXPANSION:3},ladder:[[0,'Seed startup'],[1000000,'Startup financée'],[10000000,'Scale-up'],[100000000,'Leader de catégorie'],[1000000000,'Licorne'],[10000000000,'Décacorne'],[100000000000,'Géant technologique']]}
+};
+
+const DIFF={
+ discovery:{name:'Découverte',desc:'Plus de cash, coûts réduits, incidents moins sévères et davantage de temps.',cash:1.5,cost:.78,salary:.85,fail:.72,time:24,score:.75},
+ normal:{name:'Normal',desc:'Équilibré : les erreurs coûtent cher mais restent rattrapables.',cash:1,cost:1,salary:1,fail:1,time:0,score:1},
+ hard:{name:'Difficile',desc:'Moins de marge, coûts plus élevés et conséquences plus sévères.',cash:.88,cost:1.16,salary:1.12,fail:1.18,time:-12,score:1.25},
+ brutal:{name:'Brutal',desc:'Runway court, coûts élevés et très peu de droit à l’erreur.',cash:.72,cost:1.32,salary:1.22,fail:1.38,time:-24,score:1.6}
+};
+
+const GOALS={
+ million:{name:'Premier million',desc:'Atteindre 1 M€ de valorisation.',kind:'valuation',target:1e6,months:72},
+ hundred:{name:'Champion à 100 M€',desc:'Atteindre 100 M€ de valorisation.',kind:'valuation',target:1e8,months:96},
+ billion:{name:'Le milliard',desc:'Atteindre 1 Md€ de valorisation.',kind:'valuation',target:1e9,months:120},
+ tenb:{name:'Empire à 10 Md€',desc:'Atteindre 10 Md€ de valorisation.',kind:'valuation',target:1e10,months:144},
+ cashmachine:{name:'Machine à cash',desc:'Atteindre 100 k€ de bénéfice mensuel avec au moins 50 % du capital.',kind:'profit',target:100000,months:120}
+};
+
+const SUBJECTS={
+ PRODUCT:['offre devenue trop complexe','fonction clé très demandée','parcours client trop long','bugs après une mise à jour','innovation devenue attendue','offre gratuite trop généreuse','dette produit qui ralentit tout','expérience mobile insuffisante','fonction premium demandée','qualité perçue qui stagne','personnalisation devenue difficile','roadmap devenue illisible'],
+ SALES:['gros prospect qui exige une remise','essai gratuit très long','contrat annuel payé d’avance','prospect étranger prêt à signer','client qui demande une exclusivité','personnalisation lourde pour un grand compte','partenaire qui veut revendre ton offre','client stratégique tenté par un rival','cycle de vente qui s’allonge','appel d’offres inattendu','contrat pluriannuel proposé','client qui veut payer au résultat'],
+ MARKETING:['publicités devenues trop chères','campagne qui devient virale','créateur qui parle de toi','article SEO qui décolle','newsletter très ciblée','salon professionnel imminent','programme de parrainage demandé','canal social qui convertit mieux que prévu','nouvelle audience inattendue','comparateur qui veut te référencer','campagne email qui s’essouffle','avis clients encore sous-exploités'],
+ TEAM:['profil senior disponible','commercial expérimenté intéressé','support client débordé','cofondateur potentiel','freelance expert disponible','manager externe proposé','salarié performant qui demande une hausse','départ inattendu dans l’équipe','conflit produit-vente','premier manager à recruter','équipe qui demande plus d’autonomie','poste critique sans remplaçant'],
+ FINANCE:['investisseur qui veut entrer','banque qui propose un financement','fonds qui te contacte','bridge possible en urgence','aide publique accessible','clients qui paient en retard','grosse échéance qui arrive','levée plus grosse mais plus dilutive','prévente annuelle possible','dette basée sur le revenu','nouvel investisseur stratégique','frais fixes qui dérivent'],
+ COMPETITION:['concurrent qui copie ton offre','rival qui baisse ses prix','startup financée qui attaque ta niche','acteur étranger qui arrive','nouvel entrant gratuit','grand groupe qui lance une offre proche','comparatif public défavorable','rival qui débauche un client','concurrent qui recrute un ancien salarié','nouvelle norme favorable à un rival','partenariat majeur signé par un concurrent','migration gratuite proposée par un rival'],
+ INFRA:['capacité qui approche de la limite','fournisseur technique qui augmente ses tarifs','paiements qui échouent','système lent aux heures de pointe','sauvegardes jamais testées','dépendance critique à un fournisseur','risque de sécurité découvert','migration technique devenue inévitable','monitoring trop rudimentaire','stockage qui devient coûteux','latence internationale','outil interne devenu fragile'],
+ REPUTATION:['avis négatif très visible','journaliste qui veut t’interviewer','expert qui critique ton offre','client mécontent très visible','communauté sceptique','ancien salarié qui critique','hausse de prix mal reçue','incident partagé massivement','retard public sur une promesse','rumeur sur les données','support jugé trop lent','comparaison publique défavorable'],
+ LEGAL:['conformité qui bloque une vente','conditions générales obsolètes','licence ou contrat ambigu','propriété intellectuelle mal documentée','fiscalité internationale complexe','SLA avec pénalités','marque trop proche d’un concurrent','nouveau règlement sectoriel','contrat salarié incomplet','demande de suppression complexe','sous-traitance mal cadrée','conditions de remboursement floues'],
+ STRATEGY:['niche qui convertit deux fois mieux','nouveau pays avec traction','offre annuelle plus rentable','segment premium qui accélère','marketplace ou plateforme possible','offre freemium à tester','acquéreur potentiel qui approche','pivot vers une industrie précise','produit adjacent envisageable','API publique très demandée','distribution exclusive proposée','modèle à l’usage à tester'],
