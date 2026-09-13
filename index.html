@@ -106,6 +106,52 @@
   </div>
 
   <script src="script.js"></script>
-  <script src="review.js"></script>
+  <script>
+    const RUN_STORAGE_KEY='scale-up-last-run-v1';
+    let reviewRun=[];
+
+    function reviewSnapshot(entry={}){
+      return {month:state.month,category:entry.category||'DÉPART',event:entry.event||'Création de Scale Labs',choice:entry.choice||'Tu démarres avec 1 000 € et 100 % de la société.',cash:Math.round(state.cash),revenue:Math.round(state.revenue),expenses:Math.round(state.expenses),profit:Math.round(state.profit),users:Math.round(state.users),customers:Math.round(state.customers),valuation:Math.round(state.valuation),equity:state.equity,team:state.team};
+    }
+
+    function loadLastRun(){try{const r=JSON.parse(localStorage.getItem(RUN_STORAGE_KEY)||'[]');return Array.isArray(r)?r:[]}catch(e){return[]}}
+    function updateLastRunButton(){const saved=loadLastRun();$('last-run-btn').classList.toggle('hidden',saved.length===0)}
+    function saveReviewRun(){if(!reviewRun.length)return;try{localStorage.setItem(RUN_STORAGE_KEY,JSON.stringify(reviewRun));updateLastRunButton()}catch(e){console.warn('Sauvegarde impossible',e)}}
+    function startReviewRun(){reviewRun=[reviewSnapshot()];saveReviewRun()}
+
+    const originalChooseForReview=choose;
+    choose=function(choice){
+      const decision={category:currentEvent?.category||'DÉCISION',event:currentEvent?.title||'Décision mensuelle',choice:choice.label};
+      originalChooseForReview(choice);
+      reviewRun.push(reviewSnapshot(decision));
+      saveReviewRun();
+    };
+
+    function reviewMetric(label,value,extra=''){return `<div class="review-metric"><span>${label}</span><b class="${extra}">${value}</b></div>`}
+    function renderReview(run){
+      const list=$('review-list'),summary=$('review-summary');list.innerHTML='';
+      if(!run.length){summary.textContent='Aucune partie enregistrée pour le moment.';return}
+      const first=run[0],last=run[run.length-1],worth=last.valuation*last.equity;
+      summary.textContent=`${run.length-1} décisions · de ${fmtMoney(first.valuation)} à ${fmtMoney(last.valuation)} de valorisation · ta part vaut ${fmtMoney(worth)}.`;
+      [...run].reverse().forEach(entry=>{
+        const item=document.createElement('article');item.className='review-item';
+        const profitClass=entry.profit>=0?'positive':'negative';
+        const profitLabel=entry.profit>=0?`+${fmtMoney(entry.profit)}`:fmtMoney(entry.profit);
+        item.innerHTML=`<div class="review-item-top"><div><div class="review-month">MOIS ${entry.month} · ${entry.category}</div><div class="review-event">${entry.event}</div><div class="review-choice">${entry.choice}</div></div><strong>${fmtMoney(entry.valuation)}</strong></div><div class="review-metrics">${reviewMetric('Cash',fmtMoney(entry.cash))}${reviewMetric('Revenu',fmtMoney(entry.revenue))}${reviewMetric('Résultat',profitLabel,`review-profit ${profitClass}`)}${reviewMetric('Clients',fmt(entry.customers))}${reviewMetric('Équipe',fmt(entry.team))}${reviewMetric('Ta part',`${(entry.equity*100).toFixed(1)} %`)}</div>`;
+        list.appendChild(item);
+      });
+    }
+    function openReview(run=reviewRun){const selected=run&&run.length?run:loadLastRun();renderReview(selected);$('review-overlay').classList.remove('hidden');document.body.style.overflow='hidden'}
+    function closeReview(){$('review-overlay').classList.add('hidden');document.body.style.overflow=''}
+
+    ['start-btn','restart-btn','play-again-btn'].forEach(id=>$(id).addEventListener('click',startReviewRun));
+    $('review-btn').addEventListener('click',()=>openReview());
+    $('end-review-btn').addEventListener('click',()=>openReview());
+    $('last-run-btn').addEventListener('click',()=>openReview(loadLastRun()));
+    $('close-review-btn').addEventListener('click',closeReview);
+    $('review-overlay').addEventListener('click',e=>{if(e.target===$('review-overlay'))closeReview()});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('review-overlay').classList.contains('hidden'))closeReview()});
+    updateLastRunButton();
+  </script>
 </body>
 </html>
