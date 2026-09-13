@@ -17,7 +17,7 @@
 
     <section id="start-screen" class="panel start-panel">
       <div><p class="kicker">Nouvelle partie</p><h2>1 500+ situations. Des décisions vraiment différentes.</h2><p>Les événements, réponses et débriefs sont générés selon le problème précis et les mécanismes économiques touchés : runway, CAC, churn, dilution, dette technique, concentration client, réputation et plus.</p></div>
-      <div class="start-actions"><button id="start-btn" class="primary-btn">Lancer la startup</button><button id="last-run-btn" class="ghost-btn hidden">Historique des parties</button></div>
+      <div class="start-actions"><button id="start-btn" class="primary-btn">Lancer la startup</button><button id="last-run-btn" class="ghost-btn hidden">Revoir la dernière partie</button></div>
     </section>
 
     <section id="game-screen" class="hidden">
@@ -30,7 +30,7 @@
       <section class="feed-card"><div class="feed-head"><span>Journal</span><div class="feed-actions"><button id="review-btn" class="ghost-btn">Revoir cette partie</button><button id="restart-btn" class="ghost-btn">Recommencer</button></div></div><div id="feed" class="feed"></div></section>
     </section>
 
-    <section id="end-screen" class="panel hidden"><p id="end-kicker" class="kicker"></p><h2 id="end-title"></h2><p id="end-copy"></p><div class="result-grid"><div><span>Valorisation</span><strong id="end-valuation"></strong></div><div><span>Ta part</span><strong id="end-equity"></strong></div><div><span>Valeur de ta part</span><strong id="end-worth"></strong></div><div><span>Revenu mensuel</span><strong id="end-revenue"></strong></div></div><div class="end-actions"><button id="end-review-btn" class="ghost-btn">Historique des parties</button><button id="play-again-btn" class="primary-btn">Rejouer</button></div></section>
+    <section id="end-screen" class="panel hidden"><p id="end-kicker" class="kicker"></p><h2 id="end-title"></h2><p id="end-copy"></p><div class="result-grid"><div><span>Valorisation</span><strong id="end-valuation"></strong></div><div><span>Ta part</span><strong id="end-equity"></strong></div><div><span>Valeur de ta part</span><strong id="end-worth"></strong></div><div><span>Revenu mensuel</span><strong id="end-revenue"></strong></div></div><div class="end-actions"><button id="end-review-btn" class="ghost-btn">Revoir ma partie</button><button id="play-again-btn" class="primary-btn">Rejouer</button></div></section>
   </main>
 
   <div id="review-overlay" class="review-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="review-title"><section class="review-modal"><div class="review-head"><div><p class="kicker">HISTORIQUE DE RUN</p><h2 id="review-title">Ta partie, mois par mois</h2><p id="review-summary" class="review-summary"></p></div><button id="close-review-btn" class="ghost-btn">Fermer</button></div><div id="review-list" class="review-list"></div></section></div>
@@ -49,8 +49,7 @@
     function openReview(run=reviewRun){const selected=run&&run.length?run:loadLastRun();renderReview(selected);$('review-overlay').classList.remove('hidden');document.body.style.overflow='hidden'} function closeReview(){$('review-overlay').classList.add('hidden');document.body.style.overflow=''}
     ['start-btn','restart-btn','play-again-btn'].forEach(id=>$(id).addEventListener('click',startReviewRun));$('review-btn').addEventListener('click',()=>openReview());$('end-review-btn').addEventListener('click',()=>openReview());$('last-run-btn').addEventListener('click',()=>openReview(loadLastRun()));$('close-review-btn').addEventListener('click',closeReview);$('review-overlay').addEventListener('click',e=>{if(e.target===$('review-overlay'))closeReview()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('review-overlay').classList.contains('hidden'))closeReview()});updateLastRunButton();
   </script>
-  <script src="v06patch.js"></script>
-  <script src="v061fix.js"></script>
   <script src="v07diversity.js"></script>
+  <script src="v07fix.js"></script>
 </body>
 </html>
